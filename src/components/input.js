@@ -9,8 +9,10 @@ const Input = (props) => (
     secureTextEntry={props.secureTextEntry} 
     style={[styles.inputStyle,{
       marginBottom:15 
-    }]}
+    },props.style]}
     value={props.value}
+    multiline={props.multiline}
+    
     onChangeText={(value)=>props.onChangeText(value)}
     
     >

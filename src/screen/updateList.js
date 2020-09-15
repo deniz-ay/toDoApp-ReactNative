@@ -1,28 +1,19 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, SafeAreaView, Dimensions, StyleSheet, ScrollView } from "react-native";
 import { connect } from "react-redux";
 import Input from "../components/input";
 import Button from "../components/Button";
-
-import { addItem } from "../actions";
+import { updateItem } from "../actions";
 const { width, height } = Dimensions.get("window");
+// update item
+const UpdateList = (props) => {
+  const { item, index } = props.route.params;
 
-// add item on the list
-// listeye eleman ekle
-
-const addList = (props) => {
-  const [title, setTitle] = useState("");
-  const [dsc, setDsc] = useState("");
-
+  const [title, setTitle] = useState(item.title);
+  const [dsc, setDsc] = useState(item.dsc);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#20232A" }}>
+      <ScrollView contentContainerStyle={{flex:1}} >
       <View style={styles.addItemView}>
         <Input
           placeholder={"Title"}
@@ -39,21 +30,23 @@ const addList = (props) => {
           }}
         />
         <Button
-          text={"ADD"}
+          text={"UPDATE"}
           onPress={() => {
             let obj = {
               title,
               dsc,
             };
+
+            props.updateItem(obj, index);
             props.navigation.pop();
-            props.addItem(obj);
           }}
         />
-        {props.loading && <ActivityIndicator size="large" />}
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   addItemView: {
     flex: 1,
@@ -61,10 +54,11 @@ const styles = StyleSheet.create({
     paddingTop: "5%",
   },
 });
-const mapStateToProps = ({ listResponse }) => {
-  const {} = listResponse;
 
-  return {};
+const mapStateToProps = ({ listResponse }) => {
+  const { loading, lists } = listResponse;
+
+  return { loading, lists };
 };
 
-export default connect(mapStateToProps, { addItem })(addList);
+export default connect(mapStateToProps, { updateItem })(UpdateList);
